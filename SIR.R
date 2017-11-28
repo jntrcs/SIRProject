@@ -74,9 +74,7 @@ ggplot(longData, aes(x = a12, y = a32)) +
   scale_fill_gradientn(name = "Days", trans = "log", colors=topo.colors(9),
                       breaks = breaks, labels = breaks, guide="legend")+
   labs(x="Infection Rate", y="Recovery Rate", title="Number of Days Until Peak Sickness") +
-  theme_bw() + theme(axis.text.x=element_text(size=9, angle=0, vjust=0.3),
-                     axis.text.y=element_text(size=9),
-                     plot.title=element_text(size=11)) +
+  theme_bw() +
     geom_point(aes(x=.084775, y=.34203))+geom_text(aes(label="MLE for Boarding \n School", x= .084775, y=.34203),,hjust=-.010, vjust=1.3)
  dev.off()
  
@@ -107,11 +105,15 @@ line25<-longMax[ which(round(longMax$value)%in%c(24,26,25)),]
  require(reshape2)
  normal<-as.data.frame( t(normal))
  school<-read.table("sir1.txt")
- 
- pdf(file="LackOfFit.pdf")
  norm <- melt(normal)
-a=ggplot(norm, aes(x=rep(1:14, 200)))+geom_line(aes(y=value, group=variable), alpha=.3, colour="darkgray", size=.7)
-a+geom_line(data=school, aes(x=1:14, y=V1), color="red")+xlab("Observation Time Period")+
+ 
+pdf(file="LackOfFit.pdf")
+ggplot(norm, aes(x=rep(1:14, 200)))+geom_line(aes(y=value, group=variable), alpha=.3, colour="darkgray", size=.7)+
+  geom_line(data=school, aes(x=1:14, y=V1), color="red")+xlab("Observation Time Period")+
   ylab("# Observed Infected")+ggtitle("Boarding School vs. Scenarios Simulated with MLEs")+
-  theme_bw()
+  theme_bw()+
+  theme(axis.text.x=element_text(size=12, angle=0, vjust=0.3), axis.title.x = element_text(size=12),
+        axis.title.y=element_text(size=12),
+        axis.text.y=element_text(size=12),
+        plot.title=element_text(size=12)) 
 dev.off()
