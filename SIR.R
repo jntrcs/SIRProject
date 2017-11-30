@@ -6,28 +6,12 @@ n<-743
 
 sum(data)/n #If everyone in the whole school was sick, the average person was sick for > 2 time periods
 
-#Initial assumption: the disease was introduced by a single student and spread outward from him
-p0<-c(742, 1,0)
-t0<-p0/n
-
-t0<- c(.99, .01,.0)
-trans<-matrix(c(.99,.0,0,
-                .01,.5,.0,
-                0,.5,1), byrow = T, nrow=3)
-count<-0
-sickPeople<-rep(0,24)
-for (i in 1:24){
-  count<-count+1
-t0<-trans%*%t0
-sickPeople[i]<-t0[2]*743
-}
-plot(sickPeople)
-
 
 
 a12<-0.08477529 #Actual parameter estimates for my data
 a32<-0.34203531 #actual parameter estimates for my data
 
+#An example of how to generate data and then estimate the parameters
 a12=.02
 a32=.1
 n<-150
@@ -43,6 +27,8 @@ inits<-c(.05, .4)
 constrOptim(inits,f,data=data,grad=NULL, n=n,ui=constMat,ci=ci)
 
 
+
+#Simulation for answering questions about peak illness
 steps<-(1:100)/100
 combos<-expand.grid(steps,steps)
 grid<-matrix(0, nrow=length(steps), ncol = length(steps))
@@ -97,6 +83,8 @@ line25<-longMax[ which(round(longMax$value)%in%c(24,26,25)),]
    geom_point(aes(x=.084775, y=.34203))+geom_text(aes(label="MLE for Boarding \n School", x= .084775, y=.34203),hjust=-.15, vjust=1)
  dev.off()
  
+ 
+ #Create a graphic showing the boarding school's data lack of fit
  normal<-matrix(0, nrow=200, ncol=14)
  for (i in 1:200){
    normal[i, ]<-rand.obs(a12, a32, 743, 14)
@@ -117,3 +105,10 @@ ggplot(norm, aes(x=rep(1:14, 200)))+geom_line(aes(y=value, group=variable), alph
         axis.text.y=element_text(size=12),
         plot.title=element_text(size=12)) 
 dev.off()
+
+#Simulation to find confidence intervals on the maximum # people infected
+boarding=quantile(sapply(1:1000, FUN=function(x)max(rand.obs( a12, a32, 100, 50))), c(.025, .975))
+taf=quantile(sapply(1:1000, FUN=function(x)max(rand.obs( .2, .5, 100, 50))), c(.025, .975))
+fat<-quantile(sapply(1:1000, FUN=function(x)max(rand.obs( .4, .2, 100, 50))), c(.025, .975))
+oao<-quantile(sapply(1:1000, FUN=function(x)max(rand.obs( .1, .1, 100, 50))), c(.025, .975))
+save(boarding, taf, fat, oao, file="ReasonableRange.RData")

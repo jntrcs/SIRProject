@@ -24,7 +24,7 @@ rand.obs<-function(a12, a32, n, days){
   sick
 }
 
-#Take 2:
+#The log likelihood function in R (use the c++ version for speed)
 logLikeR<-function(data, a12, a32, n){
   like<-0
   pr_old<-c(1, rep(0, n))
@@ -60,6 +60,7 @@ f<-function(inits, data, n){
   return(a)
 }
 
+#A function that takes your parameters, pop. size, and returns the expected number of people infected at a given time period
 expected.infected<-function(day, n, a12, a32){
   p0<-c(n-1, 1,0)
   t0<-p0/n
