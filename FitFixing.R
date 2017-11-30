@@ -26,10 +26,10 @@ norm <- melt(normal)
 pdf(file="BetterFit.pdf")
 ggplot(norm, aes(x=rep(1:10, 200)))+geom_line(aes(y=value, group=variable), alpha=.3, colour="darkgray", size=.7)+
   geom_line(data=school, aes(x=1:10, y=V1), color="red")+xlab("Observation Time Period")+
-  ylab("# Observed Infected")+ggtitle("Boarding School vs. Scenarios Simulated with MLEs")+
+  ylab("# Observed Infected")+ggtitle("Boarding School vs. Scenarios Simulated with MLEs from Truncated Data")+
   theme_bw()+
-  theme(axis.text.x=element_text(size=12, angle=0, vjust=0.3), axis.title.x = element_text(size=12),
-        axis.title.y=element_text(size=12),
+  theme(axis.text.x=element_text(size=12, angle=0, vjust=0.3), axis.title.x = element_text(size=14),
+        axis.title.y=element_text(size=14),
         axis.text.y=element_text(size=12),
-        plot.title=element_text(size=12)) 
+        plot.title=element_text(size=14)) +scale_x_continuous(breaks=c(2,5,8))
 dev.off()
