@@ -127,14 +127,15 @@ Having shown a reliable way to estimate the parameters, parameters for the board
 \begin{table}
 \centering
 \setlength{\tabcolsep}{30pt}
-\begin{tabular}{|c|c|}
-
-\hline
-\multicolumn{2}{|c|}{Boarding School Parameter Estimates} \\ \hline 
-$\hat{a}_{12}$ & $\hat{a}_{32}$ \\ \hline
-0.0848 & 0.3420 \\ \hline
+\begin{tabular}{l|c|c|}
+\cline{2-3}
+&\multicolumn{2}{|c|}{Boarding School Parameter Estimates} \\
+\cline{2-3}
+&$\hat{a}_{12}$ & $\hat{a}_{32}$ \\ \hline
+All Data&0.0848 & 0.3420 \\ \hline
+Post-Ramp Up&0.0.3515 & 0.4525 \\ \hline
 \end{tabular}
-\caption{MLE estimates for boarding school data}
+\caption{MLE estimates for all boarding school data, and data subset after four days}
 \label{tab2}
 \end{table}
 
@@ -142,24 +143,34 @@ A concern to draw attention to however is model fit. The data does not do a part
 
 \begin{figure}
 \centering
-\includegraphics[scale=.4]{LackOfFit.pdf}
-\caption{Simulated data shown in gray versus the gathered data}
+\begin{minipage}{.4\textwidth}
+\includegraphics[width=1\linewidth]{LackOfFit.pdf}
+\end{minipage}%
+\begin{minipage}{.4\textwidth}
+
+\centering
+\includegraphics[width=1\linewidth]{BetterFit.pdf}
+\end{minipage}
+\caption{Actual data vs. 200 simulations using MLE as parameters for full dataset and dataset without first four days}
 \label{plot1}
 \end{figure}
 
-The model might work better, however for smaller, tight-knit populations where one infection is likely to infect all the rest. For example, instead of an entire school, a classroom might better meet the assumptions of the model. 
+The model might work better, however for smaller, tight-knit populations where one infection is likely to expose the entire population. For example, instead of an entire school, a classroom might better meet the assumptions of the model. One way to address this issue for more diverse population is to estimate the parameters based only on the days after the disease has been exposed to the whole population. If we cut out the first four data points, and make a rough estimate that 680 students remain in our population, we can get data that fits our model much better, as shown on the right in Figure \ref{plot1}. When choosing whether or not to use the SIR model, the size of your population and the way the population is exposed to the disease is very important.
 
-\subsection*{Inference we can make from model}
+
+
+\subsection*{Inference on Model}
 
 In situations where the model fits the data well, knowing the parameters allows us to make many useful conclusions about the spread of the disease. For example, Equation \eqref{e1} allows us to calculate the expected proportion in any category at any given time. To do this one only needs to obtain estimates for the parameters, and then using the starting conditions, iterate repeatedly until the desired time period is reached. %Possibly add a graphic of this phenomenon 
-
-Another useful inference from this model is information about the peak illness times. Knowing when the peak will be reached and how many people will be sick could be extremely useful for planning and supplying hospitals. By doing a grid search over different combinations of the parameters, we can do a simulation study to discover both how long it will take to reach the peak and how many people will be ill when the peak is reached. 
 \begin{figure}
 \centering
 \includegraphics[scale=.7]{DayGrid.pdf}
 \caption{A heat map showing when peak illness will be reached for different parameters}
 \label{plot2}
 \end{figure}
+
+Another useful inference from this model is information about the peak illness times. Knowing when the peak will be reached and how many people will be sick could be extremely useful for planning and supplying hospitals. By doing a grid search over different combinations of the parameters, we can do a simulation study to discover both how long it will take to reach the peak and how many people will be ill when the peak is reached. 
+
 
 Figure \ref{plot2} shows the number of time periods after initial exposure until the maximum number of people are ill. The number of time periods increase exponentially as the parameters decrease. For any case $a_{12}+a_{23}>1$ the max sickness will be reached the first day because that is when the most people are at risk. 
 
@@ -198,3 +209,4 @@ By deriving the maximum likelihood estimators, I have provided tools for epidemi
 
 \end{document}
 
+\caption{Simulated data vs. real data using our fifth observation as "Day 1"}
