@@ -1,4 +1,4 @@
-setwd("~/Stat624/project2")
+setwd("~/Stat624/SIRProject")
 source("sourceFunctions.R")
 
 data<-read.table("sir1.txt")$V1
