@@ -28,7 +28,7 @@ rand.obs<-function(a12, a32, n, days){
 logLikeR<-function(data, a12, a32, n){
   like<-0
   pr_old<-c(1, rep(0, n))
-  for (i in 1:3){#length(data)){
+  for (i in 1:length(data)){
     x0<-ifelse(i==1, 1, data[i-1])
     x1<-data[i]
     pr_new<-rep(0, n+1)
@@ -43,7 +43,7 @@ logLikeR<-function(data, a12, a32, n){
           pxgr<-pxgr + probh*dbinom(x1-(x0-h), n-x0-r, a12)
 
           pr_new[j+h]<-pr_new[j+h]+probr*probh
-
+        
         }
       }
       px<-px +pxgr*probr

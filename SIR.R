@@ -68,8 +68,7 @@ ggplot(longData, aes(x = a12, y = a32)) +
  longMax$a32<-rep(seq(5, 95, by=10), each=10)/100
  longMax$a12<-rep(seq(5, 95, by=10), times=10)/100
  
-line75<-longMax[ which(round(longMax$value,0) %in%c(74,75,76)),]
-line25<-longMax[ which(round(longMax$value)%in%c(24,26,25)),]
+
 
  pdf(file="MaxGrid.pdf")
  ggplot(longMax, aes(x = a12, y = a32)) + 
@@ -98,12 +97,12 @@ line25<-longMax[ which(round(longMax$value)%in%c(24,26,25)),]
 pdf(file="LackOfFit.pdf")
 ggplot(norm, aes(x=rep(1:14, 200)))+geom_line(aes(y=value, group=variable), alpha=.3, colour="darkgray", size=.7)+
   geom_line(data=school, aes(x=1:14, y=V1), color="red")+xlab("Observation Time Period")+
-  ylab("# Observed Infected")+ggtitle("Boarding School vs. Scenarios Simulated with MLEs")+
+  ylab("# Observed Infected")+ggtitle("Boarding School vs. MLE Simulated Scenarios")+
   theme_bw()+
   theme(axis.text.x=element_text(size=12, angle=0, vjust=0.3), axis.title.x = element_text(size=14),
-        axis.title.y=element_text(size=14),
-        axis.text.y=element_text(size=12),
-        plot.title=element_text(size=14)) 
+        axis.title.y=element_text(size=16),
+        axis.text.y=element_text(size=16),
+        plot.title=element_text(size=20)) 
 dev.off()
 
 #Simulation to find confidence intervals on the maximum # people infected
