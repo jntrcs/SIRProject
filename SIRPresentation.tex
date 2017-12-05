@@ -25,7 +25,7 @@
 \begin{frame}[fragile]{The Model}
 The Susceptible-Infected-Recovered model describes how populations respond to disease.
 
-$$\begin{bmatrix}
+$$\mathbf{E}\begin{bmatrix}
     p_{S,t}       \\
     p_{I,t}      \\
 
@@ -83,7 +83,7 @@ $$
 Now that we have R, we can calculate the probability of $x_i$ given $R_i$
 
 \begin{multline*}
-f(x_i|x_{i-1}, a_{12}, a_{32}, r) = \\ \sum_{h=0}^{x_{i-1}}       {{x_{i-1}}\choose{h}} a_{32}^h(1-a_{32})^{x_{i-1}-h}  {{n-x_{i-1}-r}\choose{x_i-(x_{i-1}-h)}}  a_{12}^{x_i-(x_{i-1}-h)} (1-a_{12})^{n - r - x_i}I(x)  \end{multline*} $$
+f(x_i|x_{i-1}, a_{12}, a_{32}, r) = \\ \sum_{h=0}^{x_{i-1}}       {{x_{i-1}}\choose{h}} a_{32}^h(1-a_{32})^{x_{i-1}-h}  {{n-x_{i-1}-r}\choose{x_i-(x_{i-1}-h)}}  a_{12}^{x_i-(x_{i-1}-h)} (1-a_{12})^{n - r - x_i-h}I(x)  \end{multline*} $$
 \text{where } I(x) = \begin{cases} 1 & \text{for } x_{i-1}-h\leq x_i\leq n-r  \\ 0 &\text{otherwise} \end{cases}$$
 
 

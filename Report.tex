@@ -16,11 +16,11 @@
 \maketitle           
 
 \begin{abstract}
-This project explores parameter estimation of the SIR (Susceptible-Infected-Recovered) Markov chain epidemiology model. I derive the likelihood estimator for the special case where only one of the three states is fully observed. I apply the model to a dataset tracking the spread of a disease through an English boarding school. 
+This project explores parameter estimation of the SIR (Susceptible-Infected-Recovered) Markov chain epidemiology model. I derive the likelihood for the special case where only one of the three states is fully observed. I apply the model to a dataset tracking the spread of a disease through an English boarding school. I calculate several quantities of interest to epidemiologists.
 \end{abstract}
 
 \section{Introduction}
-The Susceptible-Infected-Recovered model (SIR) is used in epidemiology to describe the spread of a disease throughout the population. Each person in the population is expected to transition from susceptible to ill to recovered with probabilities given in the transition matrix. A Markov chain assumption assumes that their current state is the only determining factor of the probabilities of transitioning to other states. The following represents our model of interest:
+The Susceptible-Infected-Recovered (SIR) model is used in epidemiology to describe the spread of a disease throughout the population. Each person in the population is expected to transition from susceptible to ill to recovered with the probabilities given in the transition matrix. An assumption of Markov chain models is that the current state is the only determining factor of the probabilities of transitioning to other states. The following represents our model of interest:
 \begin{equation}
 \mathbf{E}\begin{bmatrix}
     p_{S,t}       \\
@@ -43,13 +43,13 @@ a_{21} & a_{22} & 0 \\
 \label{e1}
 \end{equation}
 
-The first vector represents the expected proportion of the population in each of the categories at time period t and is a function of the transition matrix and the probabilities from the time period immediately preceding. The matrix with $a_{ij}s$ is the transition matrix for the Markov chain. According to Markov chain assumptions, a person has the probability of transitioning from state i to state j in one time period (regardless of how they got to state i) with the probability given in column i, row j of the matrix. For our case we assign 0 probability of jumping from susceptible to recovered, and a probability of 1 for staying recovered once reaching the recovered state. An assumption we will make throughout the paper is that our initial state, $P_0$ is that one person was infected and the rest were susceptible ($P_{I,0}=1/n$ and $P_{S, 0} = (n-1)/n$).
+The left-hand side represents the expected proportion of the population in each of the categories at time period t and is a function of the transition matrix and the probabilities from the time period immediately preceding. The matrix with the $a_{ij}s$ is the transition matrix for the Markov chain. According to Markov chain assumptions, a person has the probability of transitioning from state i to state j in one time period (regardless of how they got to state i) with the probability given in column i, row j of the matrix. For our case we assign 0 probability of jumping from susceptible to recovered, and a probability of 1 for staying recovered once reaching the recovered state. An assumption we will make throughout the paper is that our initial state will consist of one ill person and the rest susceptible, or, in other words, $P_{I,0}=1/n$ and $P_{S, 0} = (n-1)/n$.
 
 Our dataset of interest is count data of infected students in an English boarding school over fourteen consecutive time periods. An interesting feature that will complicate our analysis is that only the population size (743) and the number sick each day are given. We do not know how many recovered students there were or how many never got sick. We will derive our likelihood to account for this unobserved information. 
 
-Being able to determine the parameters of the model is key to making inference about the spread of the disease on different populations. For example, knowing the parameters that governed the spread of the disease in the boarding school would allow us to make predictions if another school was infected. We could answer questions such as how long the disease will last, and how many people will be infected at once. Knowing these answers would be extremely  valuable to decision-makers trying to contain the disease.
+Being able to determine the parameters of the model is key to making inference about the spread of the disease to different populations. For example, knowing the parameters that governed the spread of the disease in the boarding school would allow us to make predictions if another school was infected. We could answer questions such as how long the disease will last, and how many people will be infected at once. Knowing these answers will be extremely valuable to decision-makers trying to contain the disease.
 
-Because the columns of the transition matrix must sum to one, only two parameters vary without restriction while the other two are fixed. For ease of interpretation, we will model $a_{12}$ as the probability of catching the disease, and $a_{32}$ as the probability of recovering. These two will be the parameters we obtain through maximum likelihood estimation. 
+Because the columns of the transition matrix must sum to one, only two parameters vary without restriction while the other two are fixed. For ease of interpretation, we will model $a_{12}$ as the probability of catching the disease, and $a_{32}$ as the probability of recovering. These are the two parameters we will obtain through maximum likelihood estimation. 
 
 \section{Deriving the Likelihood}
 Because our data is a sequence of observations in time, our data points are not independent or identically distributed. Instead we can write the likelihood as:
@@ -58,41 +58,41 @@ f(x_1, x_2,...,x_n| a_{12}, a_{32}) = f(x_1| a_{12}, a_{32}) f(x_2|x_1, a_{12}, 
 \end{equation}
 where $x_i$ is the number observed infected at time period i. Each observation is dependent only on the observations that proceeded it.
 
-To deal with the fact that only those in the second state are observed and reported, we can calculate the probabilities of the number of individuals in each of the either two states. To do this, define $R_i$ as a RV representing the number of people in the recovered state at the start of time period i. Then we can model each piece of the likelihood as
+To deal with the fact that only those in the second state are observed and reported, we can calculate the probabilities of the number of individuals in each of the either two states. To do this, define $R_i$ as a random variable representing the number of people in the recovered state at the start of time period i. Then we can model each piece of the likelihood as
 
 \begin{equation}
 f(x_i | x_{i-1}, a_{12}, a_{32}) =\sum_{j=0}^n f(x_i | x_{i-1}, a_{12}, a_{32}, R_i=j)\cdot Pr(R_i=j) 
 \label{sum}
 \end{equation}
 
-Summing over all possible values of $R_i$ gives us the likelihood independent of $R_i$
+Summing over all possible values of $R_i$ gives us the likelihood of $x_i$ independent of $R_i$.
 
-To demonstrate this, consider the first case, $R_1$. In $R_1$, $Pr(R_1=0)=1$ since no one has had any time to recover. In day two, the original infected person could have recovered (with probability $a_{32}$) or not (with probability $a_{22}$), therefore $Pr(R_2=0) = a_{22}$ and $Pr(R_2=1)=a_{32}$. By summing over the non-zero probabilities in $R_i$, we can calculate the full probability of $x_i$ without knowing how many are recovered or infected. While future states get much more complicated, we can continue to calculate $R_i$ as:
+To demonstrate this, consider the first case, $R_1$. In $R_1$, $Pr(R_1=0)=1$ since no one has had any time to recover. On day two, the original infected person could have recovered (with probability $a_{32}$) or not (with probability $a_{22}$), therefore $Pr(R_2=0) = a_{22}$ and $Pr(R_2=1)=a_{32}$. By summing over the non-zero probabilities in $R_i$, we can calculate the full probability of $x_i$ without knowing how many are recovered or infected. While future states get much more complicated, we can continue to calculate $R_i$ as:
 
 \begin{equation}
 Pr(R_i = r + h) = \sum_{j=0}^{x_{i-1}} Pr(H_i=j|R_{i-1}=r-j)\cdot Pr(R_{i-1}=r-j)
 \end{equation}
 
-Where $H_i$ represents the number of people who recovered on day i, a number that ranges between 0 and the number of people who were sick on $x_{i-1}$.
+Where $H_i$ represents the number of people who recovered on day i, a number that ranges between 0 and the number of people who were sick on time period i-1.
 
 \subsection*{Renormalizing $R_i$}
 Computationally, we will compute 
-$R_i$ as we calculate $f(x_{i-1})$. In certain scenarios an observation, $x_i$, may invalidate what we knew about the probability distribution of $R_i$. Consider the simple case of a population of ten people and the observed data of (5, 6, 4, 0, 1, 0). Calculating $R_5$ as derived above, we would conclude that $Pr(R_5 =10)\neq 0$. In other words, from the first four observations we would conclude that it is possible that all ten individuals have already recovered. However, $x_5$ invalidates this. To compensate when new information invalidates old  probabilities, we renormalize the densities so that they still sum to one. This is akin to rolling a dice without observing the outcome and assigning 1/6 to each probability. If you obtain information that the roll was not a one, the proper way to update the probabilities on the other five possibilities is to divide by the sum of the remaining probabilities (5/6). I employ a similar strategy here.
+$R_i$ as we calculate $f(x_{i-1})$. In certain scenarios an observation, $x_i$, may invalidate what we knew about the probability distribution of $R_i$. Consider the simple case of a population of ten people and the observed data of (5, 6, 4, 0, 1). Calculating $R_5$ as derived above, we would conclude that $Pr(R_5 =10)\neq 0$. In other words, from the first four observations we would conclude that it is possible that all ten individuals have already recovered. However, $x_5$ invalidates this. To compensate when new information invalidates old  probabilities, we renormalize the densities so that they still sum to one. This is akin to rolling a dice without observing the outcome and assigning 1/6 to each probability. If you obtain information that the roll was not a one, the proper way to update the probabilities on the other five possibilities is to divide by the sum of the remaining probabilities (5/6). I employ a similar strategy when calculating $R_6$ from $R_5$.
 
 \subsection*{Likelihood Given R}
-Now that we have a way to track $R_i$, we can focus on the first piece of \eqref{sum}. If we know r, we can write a closed form of the equation as follows:
+Now that we have a way to track $R_i$, we can focus on the first piece of \eqref{sum}. If we know r, we can write a closed form of the expression as follows:
 
 \begin{multline}
-f(x_i|x_{i-1}, a_{12}, a_{32}, r) = \\ \sum_{h=0}^{x_{i-1}}       {{x_{i-1}}\choose{h}} a_{32}^h(1-a_{32})^{x_{i-1}-h}  {{n-x_{i-1}-r}\choose{x_i-(x_{i-1}-h)}}  a_{12}^{x_i-(x_{i-1}-h)} (1-a_{12})^{n - r - x_i}I(x)  \end{multline} $$
+f(x_i|x_{i-1}, a_{12}, a_{32}, r) = \\ \sum_{h=0}^{x_{i-1}}       {{x_{i-1}}\choose{h}} a_{32}^h(1-a_{32})^{x_{i-1}-h}  {{n-x_{i-1}-r}\choose{x_i-(x_{i-1}-h)}}  a_{12}^{x_i-(x_{i-1}-h)} (1-a_{12})^{n - r - x_i-h}I(x)  \end{multline} $$
 \text{where } I(x) = \begin{cases} 1 & \text{for } x_{i-1}-h\leq x_i\leq n-r  \\ 0 &\text{otherwise} \end{cases}$$
 
 This equation breaks down into a sum of two binomial densities, one for how many people recover on time period i and one for how many people get ill on time period i. If the number of people who would need to get sick in order to observe $x_i$ exceeds the number of people who have yet to get sick, the contribution to the probability is 0, which is expressed in the indicator function.
 
 \subsection*{Computational Details}
-The resulting likelihood is complex. A triple summation is required to evaluate the likelihood--one for the time periods, one for the number of individuals recovered before day i, and one for the number recovered on day i. The partial derivatives required to obtain the maximum likelihood estimators analytically are intractable, so we will use the Nelder-Mead optimization algorithm to maximize the log-likelihood. This requires many evaluations of the log-likelihood. To facilitate faster evaluation, the log-likelihood function was coded in C++.
+The resulting likelihood is complex. A triple summation is required to evaluate the likelihood--one for the time periods, one for the number of individuals recovered before day i, and one for the number recovered on day i. The partial derivatives required to obtain the maximum likelihood estimators analytically are intractable, so I used the Nelder-Mead optimization algorithm to maximize the log-likelihood. This requires many evaluations of the log-likelihood. To facilitate faster evaluation, the log-likelihood function was coded in C++.
 
 \section{Evaluating Estimator Performance}
-After obtaining a method of calculating maximum likelihood estimates, I tested how they perform at estimating data where the true parameters were known. I was particularly interested in the bias and the variance of the estimates produced from the MLE for different sample sizes and observation times. In order to test this I ran a simulation study where I generated the data using a known Markov chain transition matrix and reported the observed infected at each time period. I then used my likelihood function and Nelder-Mead to estimate the parameters. The following tables summarizes my results for different combinations of the two parameters, size of population, and days observed.
+After obtaining a method of calculating maximum likelihood estimates, I tested how they perform at estimating data where the true parameters were known. I was particularly interested in the bias and the variance of the estimates produced from the MLE for different sample sizes and observation times. In order to test this I ran a simulation study where I generated the data using a known Markov chain transition matrix and reported the observed infected at each time period. I then used my likelihood function and Nelder-Mead to estimate the parameters. The following tables summarizes my results for different combinations of the parameters, the size of the population, and the number of time periods.
 
 \begin{table}
 \centering
@@ -124,7 +124,7 @@ The results of the simulation show that our method of estimation approximates th
 
 \section{Analysis}
 \subsection*{Boarding School Data}
-Having shown a reliable way to estimate the parameters, parameters for the boarding school data can be estimated. These estimates will be useful for predicting what would happen if another group was exposed to the same disease. Table \ref{tab2} gives the parameter estimates. According to the estimates, a susceptible individual has about a 1/12 chance of getting sick any given day, and a sick person has a 1/3 chance of recovering any given day.
+Having shown a reliable way to estimate the parameters, parameters for the boarding school data can be estimated. These estimates will be useful for predicting what would happen if another group was exposed to the same disease. Table \ref{tab2} gives the parameter estimates. According to the estimates, a susceptible individual has about a 1/12 chance of getting sick any given day, and a sick person has a 1/3 chance of recovering on any given day.
 \begin{table}
 \centering
 \setlength{\tabcolsep}{30pt}
@@ -140,7 +140,7 @@ Post-Ramp Up&0.3515 & 0.4525 \\ \hline
 \label{tab2}
 \end{table}
 
-A concern to draw attention to however is model fit. The data does not do a particularly good job of meeting model assumptions. One assumption of the model is that once a disease is present, the entire population is completely exposed to it. However, the boarding school data seems to suggest a ramp up time where as more people get infected, the probability of getting infected goes up. The left side of Figure \ref{plot1} demonstrates this graphically by simulating 200 situations where the true parameters are our MLEs, plotted against the actual boarding school data. Clearly, the model isn't well accounting for ramp up time in the data.
+A concern to draw attention to however is model fit. The data does not do a particularly good job of meeting model assumptions. One assumption of the model is that once a disease is present, the entire population is completely exposed to it. However, the boarding school data seems to suggest a ramp up time where the probability of getting infected increases as more people carry the infection. The left side of Figure \ref{plot1} demonstrates this lack of fit graphically by simulating 200 situations where the true parameters are our MLEs, plotted against the actual boarding school data. Clearly, the model isn't well accounting for ramp up time in the data.
 
 \begin{figure}
 \centering
@@ -156,7 +156,7 @@ A concern to draw attention to however is model fit. The data does not do a part
 \label{plot1}
 \end{figure}
 
-The model might work better, however for smaller, tight-knit populations where one infection is likely to expose the entire population. For example, instead of an entire school, a classroom might better meet the assumptions of the model. One way to address this issue for more diverse populations is to estimate the parameters based only on the days after the disease has been exposed to the whole population. If we remove the first four data points, and make a rough estimate that 680 students have not yet been infected at that point, we can get data that meets our model assumptions much better, as shown on the right in Figure \ref{plot1}. When choosing whether or not to use the SIR model, the size of your population and the way the population is exposed to the disease are very important considerations.
+The model might work better, however for smaller, tight-knit populations where one infection is likely to expose the entire population. For example, instead of an entire school, a classroom might better meet the assumptions of the model. One way to address this issue for more diverse populations is to estimate the parameters based only on the days after the disease has been exposed to the whole population. If we remove the first four data points, and make a rough estimate that 680 students have not yet been infected at that point, we can get data that meets our model assumptions much better, as shown on the right in Figure \ref{plot1}. When choosing whether or not to use the SIR model, epidemiologists should consider the size of the population and the way the population is exposed to the disease.
 
 
 
@@ -166,11 +166,11 @@ In situations where the model fits the data well, knowing the parameters allows 
 \begin{figure}
 \centering
 \includegraphics[scale=.7]{DayGrid.pdf}
-\caption{A heat map showing when peak illness will be reached for different parameters}
+\caption{A heat map showing when peak illness will be reached for different parameter combinations}
 \label{plot2}
 \end{figure}
 
-Another useful inference from this model is information about the peak illness times. Knowing when the peak will be reached and how many people will be sick could be extremely useful for planning and supplying hospitals. By doing a grid search over different combinations of the parameters, I simulated how long it will take to reach the peak and how many people will be ill when the peak is reached for many possible combinations of the parameters. 
+Another useful inference from this model is information about peak illness times. Knowing when the peak will be reached and how many people will be sick could be extremely useful for planning and supplying hospitals. By doing a grid search over different combinations of the parameters, I simulated how long it will take to reach the peak and how many people will be ill when the peak is reached for many possible combinations of the parameters. 
 
 
 Figure \ref{plot2} shows the number of time periods after initial exposure until the maximum number of people are ill. The number of time periods increases exponentially as the parameters decrease. For any case $a_{12}+a_{23}>1$ the max sickness will be reached the first day because that is when the most people are at risk. 
@@ -178,7 +178,7 @@ Figure \ref{plot2} shows the number of time periods after initial exposure until
 \begin{figure}
 \centering
 \includegraphics[scale=.7]{MaxGrid.pdf}
-\caption{Heat map showing the maximum number of people infected at same time}
+\caption{Heat map showing the maximum number of people infected at once}
 \label{plot3}
 \end{figure}
 
@@ -206,7 +206,7 @@ $a_{12}$ & $a_{32}$ & 95\% Quantiles from Simulation \\ \hline
 \section{Conclusion}
 Epidemiologists use the SIR model to forecast the progression and spread of a disease over time. Having accurate estimators for the parameters of the SIR model is vital to make accurate forecasts. Statisticians can assist in this effort by deriving ways to estimate the parameters using as much information as possible. In this case our only observed data was the number infected at one time. Other cases might present different information such as counts of those sick and recovered but an unknown population size or a situation where the population size is not static. Good estimators will take advantage of all possible information. 
 
-By deriving the maximum likelihood estimators, I have provided tools for epidemiologists to track disease and make predictions. In addition, simulations of data provide an excellent tool for assessing the appropriateness of the SIR model. Inference on the SIR model benefits from the Markov assumptions. Many quantities of interest (expected values, time spans) are easily calculated from the transition matrix. 
+By deriving the maximum likelihood estimators, I have provided tools for epidemiologists to track disease and make predictions. In addition, simulations of data provide an excellent tool for assessing model fit and the appropriateness of the SIR model. Inference on the SIR model benefits from the Markov assumptions. Many quantities of interest (expected values, time spans) are easily calculated from the transition matrix. 
 
 \nocite{*}
 \bibliographystyle{spbasic}
