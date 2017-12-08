@@ -11,7 +11,7 @@
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
 \title{The SIR Model}
-\subtitle{A Markov Chain model for disease spread}
+\subtitle{A Markov chain model for disease spread}
 \date{\today}
 %\date{}
 \author{Jackson Curtis}
@@ -63,7 +63,7 @@ $$
 \end{frame}
 
 \begin{frame}{Deriving the Likelihood}
-To address the fact that we didn't observe all states, we will sum over all possibilities. The R.V. $R_i$ will represent the number of people recovered on day i.
+To address the fact that we didn't observe all states, we will sum over all possibilities. The random variable $R_i$ will represent the number of people recovered by the start of time period i.
 $$
 f(x_i | x_{i-1}, a_{12}, a_{32}) =\sum_{j=0}^n f(x_i | x_{i-1}, a_{12}, a_{32}, R_i=j)\cdot Pr(R_i=j) 
 \label{sum}
@@ -75,8 +75,10 @@ $$
 We will iteratively calculate $R_i$ as we move through the algorithm:
 
 $$
-Pr(R_i = r + h) = \sum_{j=0}^{x_{i-1}} Pr(H_i=j|R_{i-1}=r-j)\cdot Pr(R_{i-1}=r-j)
+Pr(R_i = r + j) = \sum_{j=0}^{x_{i-1}} Pr(H_{i-1}=j|R_{i-1}=r-j)\cdot Pr(R_{i-1}=r-j)
 $$
+
+Where $H_i$ represents the number of people who recovered (are "healed") on day i.
 \end{frame}
 
 \begin{frame}{Deriving the Likelihood}
@@ -126,6 +128,22 @@ Pop. & No obs. & $a_{12}$ & $a_{32}$ & 95\% CI on $\hat{a}_{12}$ & 95\% CI on $\
 
 \end{frame}
 
+\begin{frame}{Parameter Estimates for Boarding School Data}
+\begin{table}
+\centering
+\setlength{\tabcolsep}{30pt}
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{Boarding School Parameter Estimates} \\
+\hline
+$\hat{a}_{12}$ & $\hat{a}_{32}$ \\ \hline
+0.0848 & 0.3420 \\ \hline
+
+\end{tabular}
+
+\label{tab2}
+\end{table}
+\end{frame}
 \begin{frame}{Lack of Fit}
 \begin{figure}
 \centering
@@ -152,8 +170,12 @@ Pop. & No obs. & $a_{12}$ & $a_{32}$ & 95\% CI on $\hat{a}_{12}$ & 95\% CI on $\
 \centering
 \includegraphics[scale=.45]{MaxGrid.pdf}
 \end{frame}
-\begin{frame}{}
-The end
+\begin{frame}{Conclusions}
+\begin{itemize}
+\item Statisticians can adopt models to whatever data is available
+\item The SIR Markov model makes strong assumptions that may not be justified in many situations
+\item Calculations using the transition matrix are straightforward
+\end{itemize}
 \end{frame}
 
 
